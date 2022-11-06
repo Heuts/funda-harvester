@@ -5,15 +5,17 @@ from bs4 import BeautifulSoup
 from house import House
 import time
 import datetime
+import sys
 
 start = time.time()
-http = urllib3.PoolManager()
-headers = {'user-agent': 'Mozilla/5.0 (Linux; U; Android 8.1.0; ru-ru; Redmi 5 Build/OPM1.171019.026) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/71.0.3578.141 Mobile Safari/537.36 XiaoMi/MiuiBrowser/11.2.4-g'}
+municipality=sys.argv[1]
 
-municipality = 'lopik'
+headers = {'user-agent': 'Mozilla/5.0 (Linux; U; Android 8.1.0; ru-ru; Redmi 5 Build/OPM1.171019.026) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/71.0.3578.141 Mobile Safari/537.36 XiaoMi/MiuiBrowser/11.2.4-g'}
+http = urllib3.PoolManager(headers=headers)
+
 fundaUrl = f'http://www.funda.nl/koop/{municipality}/beschikbaar/'
 
-response = http.request('GET', fundaUrl, headers=headers)
+response = http.request('GET', fundaUrl)
 data = response.data
 
 soup = BeautifulSoup(data, 'html.parser')
@@ -73,7 +75,7 @@ for index in range(maxPage):
     if (index != 0):
         fundaUrl = fundaUrl + f'/p{index+1}'
 
-    response = http.request('GET', fundaUrl, headers=headers)
+    response = http.request('GET', fundaUrl)
     data = response.data
 
     soup = BeautifulSoup(data, 'html.parser')
@@ -98,7 +100,7 @@ for index in range(maxPage):
         house = House(id, street_and_house_number, postalCode, city, price)
         houses.append(house)
 
-with open('houses.json', 'w', encoding='utf-8') as f:
+with open(f'{municipality}.json', 'w', encoding='utf-8') as f:
     json.dump([house.__dict__ for house in houses], f, indent=2)
 
 end = time.time()
