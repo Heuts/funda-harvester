@@ -1,4 +1,5 @@
 import re
+import sys
 from types import SimpleNamespace
 import urllib3
 import json as JsonJacascript  # TODO: rename
@@ -8,20 +9,23 @@ import time
 import datetime
 
 start = time.time()
-# municipality = sys.argv[1]
+municipality_argument = sys.argv[1]
 
 headers = {'user-agent': 'Mozilla/5.0 (Linux; U; Android 8.1.0; ru-ru; Redmi 5 Build/OPM1.171019.026) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/71.0.3578.141 Mobile Safari/537.36 XiaoMi/MiuiBrowser/11.2.4-g'}
 http = urllib3.PoolManager(headers=headers)
 
-cbs_open_data_response = http.request(
-    'GET', 'https://opendata.cbs.nl/ODataApi/OData/84734NED/Woonplaatsen')
-
-json = JsonJacascript.loads(cbs_open_data_response.data,
-                            object_hook=lambda d: SimpleNamespace(**d))
-
 municipalities = []
-for value in json.value:
-    municipalities.append(value.Title.replace(' ', '-').lower())
+
+if (municipality_argument is not None):
+    cbs_open_data_response = http.request(
+        'GET', 'https://opendata.cbs.nl/ODataApi/OData/84734NED/Woonplaatsen')
+
+    json = JsonJacascript.loads(cbs_open_data_response.data,
+                                object_hook=lambda d: SimpleNamespace(**d))
+    for value in json.value:
+        municipalities.append(value.Title.replace(' ', '-').lower())
+else:
+    municipalities.append(municipality_argument)
 
 for municipality in municipalities[:1]:
     fundaUrl = f'http://www.funda.nl/koop/{municipality}/beschikbaar/'
