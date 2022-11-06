@@ -1,6 +1,5 @@
 import re
 import urllib3
-import codecs
 import json
 from bs4 import BeautifulSoup
 from house import House
