@@ -66,7 +66,7 @@ def extract_price(price_spans, index):
     prices = re.findall('([0-9]+[,.]+[0-9]+)', price_spans[index].text)
     if (len(prices) < 1):
         return 0
-    return prices[0]
+    return int(prices[0].replace('.', ''))
 
 houses = []
 
@@ -100,7 +100,7 @@ for index in range(maxPage):
         house = House(id, street_and_house_number, postalCode, city, price)
         houses.append(house)
 
-with open(f'{municipality}.json', 'w', encoding='utf-8') as f:
+with open(f'data/{municipality}.json', 'w', encoding='utf-8') as f:
     json.dump([house.__dict__ for house in houses], f, indent=2)
 
 end = time.time()
