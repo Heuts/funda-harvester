@@ -3,11 +3,14 @@ import urllib3
 import json
 from bs4 import BeautifulSoup
 from house import House
+import time
+import datetime
 
+start = time.time()
 http = urllib3.PoolManager()
 headers = {'user-agent': 'Mozilla/5.0 (Linux; U; Android 8.1.0; ru-ru; Redmi 5 Build/OPM1.171019.026) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/71.0.3578.141 Mobile Safari/537.36 XiaoMi/MiuiBrowser/11.2.4-g'}
 
-municipality = 'amsterdam'
+municipality = 'lopik'
 fundaUrl = f'http://www.funda.nl/koop/{municipality}/beschikbaar/'
 
 response = http.request('GET', fundaUrl, headers=headers)
@@ -97,3 +100,6 @@ for index in range(maxPage):
 
 with open('houses.json', 'w', encoding='utf-8') as f:
     json.dump([house.__dict__ for house in houses], f, indent=2)
+
+end = time.time()
+print(str(datetime.timedelta(seconds=end-start)))
