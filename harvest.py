@@ -1,6 +1,7 @@
 import re
 import urllib3
 import codecs
+import json
 from bs4 import BeautifulSoup
 from house import House
 
@@ -66,9 +67,10 @@ def extract_city(postal_code_and_city):
 
 
 def extract_price(price_spans, index):
-    return re.findall('([0-9]+[,.]+[0-9]+)', price_spans[index].text)
+    return re.findall('([0-9]+[,.]+[0-9]+)', price_spans[index].text)[0]
 
 
+houses = []
 for index, div in enumerate(header_divs):
     id = retrieve_id_from_div(div)
     street_and_house_number = extract_street_and_housenumber(title_h2s, index)
@@ -78,4 +80,8 @@ for index, div in enumerate(header_divs):
     price = extract_price(price_spans, index)
 
     house = House(id, street_and_house_number, postalCode, city, price)
-    print(house)
+    houses.append(house)
+
+with open('houses.json', 'w', encoding='utf-8') as f:
+    json.dump([house.__dict__ for house in houses], f, indent=2)
+    
