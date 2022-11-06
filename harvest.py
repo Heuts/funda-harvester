@@ -1,5 +1,6 @@
 import re
 import urllib3
+import codecs
 from bs4 import BeautifulSoup
 from house import House
 
@@ -17,6 +18,7 @@ search_result_header_class = 'search-result__header'
 search_result_price_class = 'search-result-price'
 search_result_header_title_class = 'search-result__header-title'
 search_result_header_subtitle_class = 'search-result__header-subtitle'
+pagination_class = 'pagination-pages'
 
 header_divs = soup.find_all('div', {'class': search_result_header_class})
 title_h2s = soup.find_all(
@@ -24,6 +26,18 @@ title_h2s = soup.find_all(
 subtitle_h4s = soup.find_all(
     'h4', {'class': search_result_header_subtitle_class})
 price_spans = soup.find_all('span', {'class': search_result_price_class})
+pagination_hyperlinks = soup.find(
+    'div', {'class': pagination_class}).find_all('a')
+
+# TODO: Improve nested for loop
+maxPage = 0
+for hyperlink in pagination_hyperlinks:
+    pages = [int(s) for s in hyperlink.text.split() if s.isdigit()]
+    for page in pages:
+        if page > maxPage:
+            maxPage = page
+
+print(maxPage)
 
 
 def retrieve_id_from_div(div):
