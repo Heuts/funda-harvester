@@ -7,7 +7,7 @@ from house import House
 http = urllib3.PoolManager()
 headers = {'user-agent': 'Mozilla/5.0 (Linux; U; Android 8.1.0; ru-ru; Redmi 5 Build/OPM1.171019.026) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/71.0.3578.141 Mobile Safari/537.36 XiaoMi/MiuiBrowser/11.2.4-g'}
 
-municipality = 'utrecht'
+municipality = 'amsterdam'
 fundaUrl = f'http://www.funda.nl/koop/{municipality}/beschikbaar/'
 
 response = http.request('GET', fundaUrl, headers=headers)
@@ -34,7 +34,7 @@ for hyperlink in pagination_hyperlinks:
 
 def retrieve_house_id_from_div(div):
     href = (div.find('a')['href'])
-    id = href.split('/')[3].replace('huis-', '').replace('appartement-', '').split('-')[0]
+    id = href.split('/')[3].replace('huis-', '').replace('appartement-', '').replace('parkeergelegenheid', '').split('-')[0]
     return id
 
 
@@ -52,6 +52,8 @@ def extract_postal_code(postal_code_and_city):
 
 
 def extract_city(postal_code_and_city):
+    if (len(postal_code_and_city.split()) < 3):
+        return 'default-city'
     return postal_code_and_city.split()[2]
 
 
