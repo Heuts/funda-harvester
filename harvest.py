@@ -2,7 +2,7 @@ import re
 import sys
 from types import SimpleNamespace
 import urllib3
-import json as JsonJacascript  # TODO: rename
+import json as JsonJavascript  # TODO: rename
 from bs4 import BeautifulSoup
 from house import House
 import time
@@ -20,7 +20,7 @@ if (municipality_argument is None):
     cbs_open_data_response = http.request(
         'GET', 'https://opendata.cbs.nl/ODataApi/OData/84734NED/Woonplaatsen')
 
-    json = JsonJacascript.loads(cbs_open_data_response.data,
+    json = JsonJavascript.loads(cbs_open_data_response.data,
                                 object_hook=lambda d: SimpleNamespace(**d))
     for value in json.value:
         municipalities.append(value.Title.replace(' ', '-').lower())
@@ -117,7 +117,7 @@ for municipality in municipalities[:1]:
             houses.append(house)
 
     with open(f'data/{municipality}.json', 'w', encoding='utf-8') as f:
-        JsonJacascript.dump([house.__dict__ for house in houses], f, indent=2)
+        JsonJavascript.dump([house.__dict__ for house in houses], f, indent=2)
 
 end = time.time()
 print(str(datetime.timedelta(seconds=end-start)))
