@@ -16,7 +16,7 @@ http = urllib3.PoolManager(headers=headers)
 
 municipalities = []
 
-if (municipality_argument is not None):
+if (municipality_argument is None):
     cbs_open_data_response = http.request(
         'GET', 'https://opendata.cbs.nl/ODataApi/OData/84734NED/Woonplaatsen')
 
