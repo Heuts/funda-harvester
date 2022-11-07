@@ -18,3 +18,8 @@ jobs:
       - name: execute py script
         run: |
           python3 harvest.py utrecht
+      - name: archive utrecht data
+        uses: actions/upload-artifact@v3
+        with:
+          name: utrecht
+          path: data/utrecht.json
